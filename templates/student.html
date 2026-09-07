@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            padding: 40px;
+        }
+
+        .card {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        .detail {
+            margin: 15px 0;
+            font-size: 18px;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+
+        .back {
+            background: #2563eb;
+        }
+
+        .edit {
+            background: #f59e0b;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <h1>Student Details</h1>
+
+    <div class="detail">
+        <span class="label">ID:</span>
+        {{ student.id }}
+    </div>
+
+    <div class="detail">
+        <span class="label">Name:</span>
+        {{ student.name }}
+    </div>
+
+    <div class="detail">
+        <span class="label">Email:</span>
+        {{ student.email }}
+    </div>
+
+    <div class="detail">
+        <span class="label">Age:</span>
+        {{ student.age }}
+    </div>
+
+    <div class="detail">
+        <span class="label">Course:</span>
+        {{ student.course }}
+    </div>
+
+    <a href="{% url 'students' %}" class="btn back">
+        Back to Students
+    </a>
+
+    <a href="{% url 'update_student' student.id %}" class="btn edit">
+        Edit Student
+    </a>
+
+</div>
+
+</body>
+</html>
+```
