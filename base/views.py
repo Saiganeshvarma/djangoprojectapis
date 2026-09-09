@@ -5,21 +5,17 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 
-from .models import Product, CartItem 
+from .models import Product, CartItem
+
 from .serializers.registerserializer import RegisterSerializer
 from .serializers.productserializer import ProductSerializer
 from .serializers.cartserializer import CartItemSerializer
+from .serializers.loginserializer import MyTokenObtainPairSerializer
 
 from .permissions import IsStaffUser
 from .pagination import ProductPagination
 from .throttles import ProductCreateThrottle
-
-
-
-
-
-
-
+from .filters import ProductFilter
 
 
 # =========================
@@ -38,6 +34,7 @@ class RegisterView(generics.CreateAPIView):
 
 class LoginView(TokenObtainPairView):
 
+    serializer_class = MyTokenObtainPairSerializer
     permission_classes = [AllowAny]
 
 
@@ -47,7 +44,7 @@ class LoginView(TokenObtainPairView):
 
 class ProductViewSet(viewsets.ModelViewSet):
 
-    queryset = Product.objects.all()
+    queryset = Product.objects.all().order_by("-created_at")
     serializer_class = ProductSerializer
     pagination_class = ProductPagination
 
@@ -57,10 +54,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         OrderingFilter
     ]
 
-    filterset_fields = [
-        "price",
-        "stock"
-    ]
+    filterset_class = ProductFilter
 
     search_fields = [
         "name",
@@ -72,28 +66,23 @@ class ProductViewSet(viewsets.ModelViewSet):
         "created_at"
     ]
 
-    throttle_classes = [
-        ProductCreateThrottle
-    ]
+    # Default ordering: newest first
+    ordering = ["-created_at"]
 
     def get_permissions(self):
-
         if self.action in ["list", "retrieve"]:
-
-            return [
-        IsAuthenticated()
-    ]
-
-        return [
-        IsAuthenticated(),
-        IsStaffUser()
-    ]
+            return [IsAuthenticated()]
+        return [IsAuthenticated(), IsStaffUser()]
 
 
-    # Cart Apis 
+    # =========================
+    # CART APIs
+    # =========================
+
 class CartViewSet(viewsets.ModelViewSet):
 
     serializer_class = CartItemSerializer
+
     permission_classes = [
         IsAuthenticated
     ]
